@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/**
+ * Color + canvas tokens live in src/ds/classNames.js (`ds.bodyRoot` on <body> via main.jsx).
+ */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Timeline / row reveal */
+@keyframes rise-fade {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-on-view {
+  opacity: 0;
+}
+
+.reveal-on-view.is-inview {
+  animation: rise-fade 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Full section blocks — slightly softer motion than timeline rows */
+.section-reveal-on-view {
+  opacity: 0;
+}
+
+.section-reveal-on-view.is-inview {
+  animation: rise-fade 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal-on-view {
+    opacity: 1;
+  }
+  .section-reveal-on-view.is-inview {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-view {
+    opacity: 1;
+  }
+  .reveal-on-view.is-inview {
+    animation: none;
+  }
+}
+

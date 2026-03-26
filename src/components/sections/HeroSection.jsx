@@ -13,10 +13,24 @@ function XIcon(props) {
   )
 }
 
+function HeroHeadline({ headline, accent }) {
+  if (!accent) return headline
+  const i = headline.indexOf(accent)
+  if (i < 0) return headline
+  return (
+    <>
+      {headline.slice(0, i)}
+      <span className={ds.heroHeadlineAccent}>{accent}</span>
+      {headline.slice(i + accent.length)}
+    </>
+  )
+}
+
 export function HeroSection() {
   return (
     <section id="hero" className={ds.heroSection} aria-labelledby="hero-title">
       <div className={ds.heroDecorLayer} aria-hidden>
+        <div className={ds.heroRadialGlow} />
         <div className={ds.heroMesh} />
         <div className={ds.heroGlowPrimary} />
         <div className={ds.heroGlowSecondary} />
@@ -30,24 +44,21 @@ export function HeroSection() {
             {PERSON.title} · {PERSON.location.split(',')[0]}
           </p>
           <h1 id="hero-title" className={cn(ds.rhythmHeroH1, ds.h1Hero)}>
-            {hero.headline}
+            <HeroHeadline headline={hero.headline} accent={hero.headlineAccent} />
           </h1>
-          <p className={cn(ds.rhythmHeroSubhead, ds.heroLead)}>{hero.subhead}</p>
 
-          {hero.routeIntro ? <p className={ds.heroRouteIntro}>{hero.routeIntro}</p> : null}
-
-          <ul className={cn(ds.rhythmHeroProof, ds.proofList)}>
-            {hero.proofPoints.map((line) => (
-              <li key={line} className={ds.proofListItem}>
+          <ul className={ds.heroHighlightList}>
+            {hero.highlights.map((line) => (
+              <li key={line} className={ds.heroHighlightItem}>
                 {line}
               </li>
             ))}
           </ul>
 
           <div className={ds.rhythmHeroCTA}>
-            <Button variant="primary" onClick={() => scrollToSection('projects')}>
-              Case studies
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
+            <Button variant="primary" className={ds.btnPrimaryProminent} onClick={() => scrollToSection('projects')}>
+              View work
+              <ArrowRight className={ds.iconSm} strokeWidth={2} />
             </Button>
             <Button variant="secondary" onClick={() => scrollToSection('contact')}>
               Contact
@@ -72,11 +83,11 @@ export function HeroSection() {
                 { href: PERSON.linkedin, label: 'LinkedIn', Icon: Linkedin },
               ].map(({ href, label, Icon }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={ds.socialCircle} aria-label={label}>
-                  <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                  <Icon className={ds.iconHeroSocial} strokeWidth={1.75} />
                 </a>
               ))}
               <a href={PERSON.x} target="_blank" rel="noopener noreferrer" className={ds.socialCircle} aria-label="X">
-                <XIcon className="h-4 w-4" />
+                <XIcon className={ds.iconSm} />
               </a>
             </div>
           </div>
@@ -92,7 +103,7 @@ export function HeroSection() {
             <div className={ds.heroGlanceBlock}>
               {[
                 { k: 'Stack', v: 'MongoDB · Express · React · Node' },
-                { k: 'Focus', v: 'REST · JWT · RBAC · ops-ready UIs' },
+                { k: 'Focus', v: 'APIs, access rules, tools for staff' },
                 { k: 'Base', v: PERSON.location },
               ].map((row) => (
                 <div key={row.k} className={ds.rhythmHeroPanelRow}>

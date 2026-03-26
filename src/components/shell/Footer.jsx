@@ -1,66 +1,110 @@
-import { PERSON, FOOTER_BLURB } from '../../data/site.js'
-import { interests } from '../../data/profile.js'
+import { Folder, Github, Linkedin, Mail, User } from 'lucide-react'
+import {
+  PERSON,
+  FOOTER_DESCRIPTION,
+  FOOTER_INITIALS,
+  FOOTER_SIGNATURE,
+} from '../../data/site.js'
+import { scrollToSection } from '../../lib/scroll.js'
 import { cn, ds } from '../../ds/classNames.js'
 
-const QUICK_LINKS = [
-  { href: PERSON.github, label: 'GitHub', external: true },
-  { href: PERSON.linkedin, label: 'LinkedIn', external: true },
-  { href: PERSON.x, label: 'X', external: true },
-  { href: `mailto:${PERSON.email}`, label: 'Email', external: false },
+const SECTION_LINKS = [
+  { label: 'About', sectionId: 'about', Icon: User },
+  { label: 'Projects', sectionId: 'projects', Icon: Folder },
+  { label: 'Contact', sectionId: 'contact', Icon: Mail },
 ]
 
-export function Footer() {
-  const y = new Date().getFullYear()
+const navIconProps = {
+  className: ds.footerNavIcon,
+  'aria-hidden': true,
+  size: 16,
+  strokeWidth: 1.75,
+}
 
+const socialIconProps = {
+  className: ds.footerSocialIcon,
+  'aria-hidden': true,
+  size: 16,
+  strokeWidth: 1.75,
+}
+
+export function Footer() {
   return (
     <footer className={cn(ds.footerSurface, ds.footerY)}>
-      <div className={ds.footerAccentLine} aria-hidden />
-      <div className={ds.footerGlow} aria-hidden />
-      <div className={cn(ds.container, ds.footerInner)}>
+      <div className={ds.footerDecorGlow} aria-hidden>
+        <div className={ds.footerDecorGlowBlob} />
+      </div>
+      <div className={ds.footerShell}>
         <div className={ds.footerGrid}>
-          <div className={ds.footerBrandStack}>
-            <p className={ds.footerKicker}>Let’s connect</p>
-            <p className={ds.footerName}>{PERSON.name}</p>
-            <p className={ds.footerRole}>{PERSON.title}</p>
-            <p className={ds.footerBlurbLead}>{FOOTER_BLURB}</p>
-            <div className={ds.footerLinksRow}>
-              {QUICK_LINKS.map(({ href, label, external }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className={ds.footerQuickLink}
-                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  {label}
-                </a>
-              ))}
+          <div className={ds.footerColLeft}>
+            <div className={ds.footerBrandRow}>
+              <div className={ds.footerLogoMark} aria-hidden>
+                {FOOTER_INITIALS}
+              </div>
+              <p className={ds.footerName}>{PERSON.name}</p>
             </div>
+            <p className={ds.footerRole}>{PERSON.title}</p>
+            <p className={ds.footerDescription}>{FOOTER_DESCRIPTION}</p>
           </div>
 
-          <div className={ds.footerAsideStack}>
-            <p className={ds.footerAsideLabel}>Beyond the keyboard</p>
-            <ul className={ds.footerInterestList}>
-              {interests.map((item) => (
-                <li key={item} className={ds.footerInterestPill}>
-                  {item}
-                </li>
+          <div className={ds.footerNavBlock}>
+            <p className={ds.footerExploreHeading}>Explore</p>
+            <nav
+              className={ds.footerNavCol}
+              aria-label="Footer navigation"
+            >
+              {SECTION_LINKS.map(({ label, sectionId, Icon }) => (
+                <button
+                  key={sectionId}
+                  type="button"
+                  className={ds.footerNavLinkButton}
+                  onClick={() => scrollToSection(sectionId)}
+                >
+                  <span className={ds.footerNavLinkRow}>
+                    <Icon {...navIconProps} />
+                    <span className={ds.footerNavLabel}>{label}</span>
+                  </span>
+                </button>
               ))}
-            </ul>
+            </nav>
           </div>
+
+          <nav className={ds.footerSocialCol} aria-label="Social links">
+            <a
+              href={PERSON.github}
+              className={ds.footerSocialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github {...socialIconProps} />
+              <span>GitHub</span>
+            </a>
+            <a
+              href={PERSON.linkedin}
+              className={ds.footerSocialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Linkedin {...socialIconProps} />
+              <span>LinkedIn</span>
+            </a>
+            <a
+              href={`mailto:${PERSON.email}`}
+              className={ds.footerSocialLink}
+            >
+              <Mail {...socialIconProps} />
+              <span>Email</span>
+            </a>
+          </nav>
         </div>
+
+        <p className={ds.footerSignature}>{FOOTER_SIGNATURE}</p>
 
         <div className={ds.footerBottomBar}>
           <p className={ds.footerCopyrightLine}>
-            <span className={ds.footerCopyrightAccent}>© {y}</span>
-            <span className={ds.footerCopyrightSep} aria-hidden>
-              ·
-            </span>
-            <span className={ds.footerCopyrightBody}>{PERSON.name}</span>
-            <span className={ds.footerCopyrightSep} aria-hidden>
-              ·
-            </span>
-            <span className={ds.footerCopyrightMuted}>{PERSON.location}</span>
+            © 2026 {PERSON.name}
           </p>
+          <p className={ds.footerBuiltWith}>Built with React + Tailwind</p>
         </div>
       </div>
     </footer>

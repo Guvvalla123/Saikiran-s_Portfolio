@@ -1,55 +1,52 @@
 /**
- * Project case studies — derived from resume PROJECT EXPERIENCE.
- * Problem / solution / impact framed for hiring managers.
+ * Active engineering work — order is fixed for the Projects section.
+ * GitHub URL uses the public profile; point `github` per project when repos are split out.
  */
+import { PERSON } from './site.js'
 
-export const projectFilters = [
-  { id: 'all', label: 'All' },
-  { id: 'enterprise', label: 'Enterprise' },
-  { id: 'platform', label: 'Platform' },
-  /** Intentionally empty for empty-state UX (no projects carry this category). */
-  { id: 'consumer', label: 'Consumer' },
-]
+const GITHUB = PERSON.github
+
+export const projectsSectionIntro =
+  'Things I’m building now—APIs, auth, MongoDB, and React screens for staff and operators.'
 
 export const projects = [
   {
-    id: 'shift-management',
-    title: 'Shift management system',
-    tagline: 'Workforce operations — Admin, Manager, Employee',
-    stack: 'MERN · RBAC · Recharts · REST · Audit logging',
-    categories: ['enterprise'],
-    problem:
-      'Operations teams needed controlled onboarding, hierarchical access, and reliable shift and attendance workflows without security gaps or opaque changes.',
-    solution:
-      'Built a role-based workforce product: invite-only registration, shift scheduling, attendance and timesheets, leave/shift-change approvals, audit logs, and Recharts dashboards. Calendar views with external sync; hardened REST layer with validation, rate limiting, and middleware controls; CSV exports for reporting.',
-    impact:
-      'Clear accountability via audit trails; structured approvals reduced ad hoc comms; indexed MongoDB patterns support reporting as data grows.',
-    links: { github: null, live: null },
+    id: 'bwpost-shift-management',
+    title: 'Shift planning & attendance (BWPOST)',
+    status: 'In Development',
+    hook: 'Used at BWPOST to plan shifts, log attendance, and run approvals—so managers and staff share one place for time and coverage.',
+    features: [
+      'Handles shift rules, roles, and sensitive actions behind checked inputs and rate limits.',
+      'Tracks attendance and history; staff and managers see dashboards built for daily use.',
+      'Logs important changes so support can see who changed what, when.',
+    ],
+    tech: ['MongoDB', 'Express', 'React', 'Node', 'JWT', 'REST'],
+    github: GITHUB,
   },
   {
-    id: 'job-portal',
-    title: 'Job portal application',
-    tagline: 'Candidates · Recruiters · Admins',
-    stack: 'MERN · JWT/RBAC · BullMQ · Cloudinary · React Query',
-    categories: ['platform', 'enterprise'],
-    problem:
-      'A multi-sided hiring flow needed secure roles, application state machines, document handling, and reliable notifications without blocking the API.',
-    solution:
-      'Designed REST APIs for jobs, applications, and workflows; JWT/RBAC across dashboards; resume uploads via Cloudinary; async notifications with Redis/BullMQ; React front end with React Query, search/filter, and status-driven application tracking. Validation, errors, and API security applied end-to-end.',
-    impact:
-      'Separated concerns for three personas; background jobs keep UX responsive; document pipeline supports compliance-style review.',
-    links: { github: null, live: null },
+    id: 'bwpost-trennkarte',
+    title: 'Trennkarte records & approvals (BWPOST)',
+    status: 'In Development',
+    hook: 'Used to manage dietary-separation records for BWPOST—kitchen and admin stay aligned on what was filed and approved.',
+    features: [
+      'Moves each record through draft, review, and approval before it counts as final.',
+      'Offers search and filtered lists so staff find the right card quickly.',
+      'Stores earlier values on key fields when something is updated.',
+    ],
+    tech: ['MongoDB', 'Express', 'React', 'Node', 'Mongoose', 'JWT'],
+    github: GITHUB,
   },
   {
-    id: 'cad-pipeline',
-    title: 'CAD & reporting automation',
-    tagline: 'Engineering tooling (prior role)',
-    stack: 'C# · AutoCAD API · Inventor · JavaScript · EPPlus',
-    categories: ['enterprise'],
-    problem: 'Engineering teams lost time on repetitive drafting and manual Excel reporting.',
-    solution:
-      'Desktop automation with AutoCAD APIs; 3D visualization utilities with Inventor and JavaScript; EPPlus for structured Excel outputs.',
-    impact: 'Measurable reduction in manual cycles on recurring documentation tasks.',
-    links: { github: null, live: null },
+    id: 'job-portal-system',
+    title: 'Job Portal System',
+    status: 'In Development',
+    hook: 'Used to post jobs, collect applications, and give candidates, recruiters, and admins each their own view of the process.',
+    features: [
+      'Tracks jobs and applications through clear states instead of scattered email.',
+      'Résumés and uploads run in the background so the UI stays responsive.',
+      'Keeps each role’s screens in sync with live data as people search and filter.',
+    ],
+    tech: ['MongoDB', 'Express', 'React', 'Node', 'Redis', 'BullMQ', 'TanStack Query'],
+    github: GITHUB,
   },
 ]

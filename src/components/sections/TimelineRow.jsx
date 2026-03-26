@@ -7,7 +7,7 @@ export function TimelineRow({ index, children }) {
   return (
     <div
       ref={ref}
-      className={cn(ds.timelineRow, inView && 'is-inview')}
+      className={cn(ds.timelineRow, inView && ds.sectionRevealStateInView)}
       style={inView ? { animationDelay: `${index * 72}ms` } : undefined}
     >
       <span className={ds.timelineDot} aria-hidden />

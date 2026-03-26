@@ -1,19 +1,29 @@
 /**
- * Design system — all palette + spacing utilities live here.
- * Components use `cn(ds.*)` only (no raw spacing/color in JSX).
+ * Design system — dark-first, premium SaaS-grade surfaces (no light theme).
+ * Indigo-only accent. Components use `cn(ds.*)` only.
  *
  * Copy convention: **sentence case** in source strings (headlines, labels, buttons).
- * Do not use `uppercase` in the DS for labels — casing comes from the copy, not CSS.
- *
- * SP = spacing primitives (4px Tailwind scale). Composed tokens reference SP via cn().
+ * SP = spacing primitives (4px Tailwind scale).
  */
+
+/** Layered float shadow — cards / panels */
+const SHADOW_FLOAT = 'shadow-[0_10px_40px_rgba(0,0,0,0.6)]'
+const SHADOW_PRIMARY_GLOW = 'shadow-[0_0_18px_rgba(99,102,241,0.22)]'
 
 export function cn(...parts) {
   return parts.filter(Boolean).join(' ')
 }
 
 const FOCUS_RING =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:focus-visible:outline-indigo-400'
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400'
+
+/** Shared horizontal shell — navbar row + main `ds.container` */
+const LAYOUT_CONTAINER = 'mx-auto max-w-5xl px-5 sm:px-8'
+
+const iconButtonBase = cn(
+  'rounded-lg p-2 text-zinc-400 transition-colors duration-200 hover:bg-zinc-800/90 hover:text-white',
+  FOCUS_RING,
+)
 
 /** Spacing scale: stacks, gaps, insets, pads — single source */
 const SP = {
@@ -37,8 +47,8 @@ const SP = {
   gridGapMd: 'gap-6',
   gridGapLg: 'gap-14 lg:gap-16',
   gridGapXl: 'gap-20 lg:gap-16',
-  gridGapContact: 'gap-14',
-  formGap: 'gap-5',
+  gridGapContact: 'gap-8 lg:gap-10',
+  formGap: 'gap-4',
 
   insetTop0p5: 'mt-0.5',
   insetTop1: 'mt-1',
@@ -54,6 +64,7 @@ const SP = {
   insetTop10: 'mt-10',
   insetTop11: 'mt-11',
   insetTop14: 'mt-14',
+  insetTop16: 'mt-16',
 
   insetBottom12: 'mb-12',
   sectionHeaderMargin: 'mb-14 md:mb-20 lg:mb-24',
@@ -68,8 +79,8 @@ const SP = {
 
   padTopAsideLg: 'lg:pt-2',
 
-  heroPadBottom: 'pb-20 md:pb-28',
-  heroPadTop: 'pt-12 md:pt-16 lg:pt-20',
+  heroPadBottom: 'pb-24 md:pb-32',
+  heroPadTop: 'pt-14 md:pt-20 lg:pt-24',
   padTopLoose: 'pt-7',
   padHeroGlance: 'p-5 md:p-6',
 }
@@ -78,352 +89,467 @@ export const ds = {
   ...SP,
 
   pageX: 'px-5 sm:px-8',
-  container: 'mx-auto max-w-5xl px-5 sm:px-8',
-  sectionY: 'py-24 md:py-32 lg:py-36',
-  /** Alternating section canvases — breaks flat scroll rhythm */
-  sectionToneDefault:
-    'border-t border-zinc-200/70 bg-zinc-50 dark:border-white/[0.07] dark:bg-zinc-950',
-  sectionToneMuted:
-    'border-t border-zinc-200/60 bg-zinc-100/50 dark:border-white/[0.06] dark:bg-zinc-900/50',
+  container: LAYOUT_CONTAINER,
+  /** Navbar inner row — same width as sections */
+  navBarInner: cn('flex h-16 items-center justify-between', LAYOUT_CONTAINER),
+  navHeaderFixed:
+    'fixed top-0 z-50 w-full transition-[border-color,background-color,box-shadow,backdrop-filter] duration-300 ease-out',
+  /** Section inner wrapper — stacks above tonal backgrounds */
+  sectionContent: 'relative z-[1]',
+  sectionY: 'py-24 md:py-28 lg:py-32',
+  /** Deep base — slight top edge for separation */
+  sectionToneDefault: cn(
+    'border-t border-zinc-800/80 bg-zinc-950 bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-950',
+  ),
+  /** Stepped surface — reads as a distinct band */
+  sectionToneMuted: cn(
+    'border-t border-zinc-800 bg-gradient-to-b from-zinc-900/95 via-zinc-900 to-zinc-950',
+  ),
+  /** Skills — restrained indigo lift */
   sectionToneWash: cn(
-    'border-t border-zinc-200/55 bg-gradient-to-b from-indigo-500/[0.05] via-zinc-50 to-zinc-50 dark:border-white/[0.06] dark:from-indigo-400/[0.06] dark:via-zinc-950 dark:to-zinc-950',
+    'border-t border-zinc-800 bg-gradient-to-b from-indigo-500/[0.06] via-zinc-950 to-zinc-950',
+  ),
+  /** Projects — hiring focal plane */
+  sectionToneProjects: cn(
+    'border-t border-zinc-800 bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950',
   ),
   sectionReveal: 'section-reveal-on-view',
-  footerY: 'py-20 md:py-24 lg:py-28',
+  sectionRoot: 'relative',
+  /** Pairs with `.section-reveal-on-view` in index.css */
+  sectionRevealStateInView: 'is-inview',
   footerSurface: cn(
-    'relative overflow-hidden border-t border-zinc-200/55 bg-gradient-to-b from-indigo-500/[0.07] via-zinc-100/55 to-zinc-100/75 dark:border-white/[0.08] dark:from-indigo-500/[0.11] dark:via-zinc-900/55 dark:to-zinc-950',
+    'relative isolate overflow-hidden border-t border-zinc-800',
+    'bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900',
+    "before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-px before:w-full before:content-['']",
+    'before:bg-gradient-to-r before:from-transparent before:via-indigo-500/45 before:to-transparent',
   ),
-  footerAccentLine:
-    'pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent dark:via-indigo-400/45',
-  footerGlow:
-    'pointer-events-none absolute -right-1/4 bottom-0 h-48 w-[min(100%,28rem)] rounded-full bg-indigo-400/[0.07] blur-[80px] dark:bg-indigo-400/[0.09]',
-  footerInner: 'relative z-[1]',
-  footerGrid: cn('grid gap-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-start md:gap-16 lg:gap-20'),
-  footerBrandStack: SP.stackLg,
-  footerKicker: cn(
-    'font-mono text-[10px] font-semibold tracking-wide text-indigo-600 dark:text-indigo-400',
+  footerY: 'py-20 md:py-24',
+  footerDecorGlow:
+    'pointer-events-none absolute inset-0 z-0 opacity-20',
+  footerDecorGlowBlob:
+    'absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 bg-indigo-500/10 blur-3xl',
+  footerShell: 'relative z-[1] mx-auto max-w-6xl px-6',
+  footerGrid: cn(
+    'grid grid-cols-1 gap-x-16 gap-y-10',
+    'md:grid-cols-3 md:items-start',
   ),
-  footerName: 'text-2xl font-semibold tracking-tight text-zinc-900 sm:text-[1.65rem] dark:text-white',
-  footerRole: cn(SP.insetTop2, 'text-sm font-semibold text-indigo-600 dark:text-indigo-400'),
-  footerBlurbLead: cn(SP.insetTop4, 'max-w-lg text-base font-normal leading-relaxed text-zinc-700 dark:text-zinc-300'),
-  footerLinksRow: cn(SP.insetTop6, 'flex flex-wrap items-center', 'gap-x-5 gap-y-2'),
-  footerQuickLink: cn(
-    'text-sm font-semibold text-zinc-700 underline-offset-4 transition-colors duration-200 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-400',
+  footerColLeft: 'flex min-w-0 flex-col gap-3',
+  footerBrandRow: 'flex flex-wrap items-center gap-3',
+  footerLogoMark: cn(
+    'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
+    'border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 to-indigo-500/5',
+    'shadow-[0_0_20px_rgba(99,102,241,0.15)]',
+    'text-sm font-semibold text-white',
+    'transition-transform duration-300 motion-safe:hover:scale-105',
+  ),
+  footerName: 'text-lg font-semibold text-white',
+  footerRole: 'text-sm text-indigo-400',
+  footerDescription: 'max-w-xs text-sm text-zinc-400',
+  footerNavBlock: 'flex flex-col items-center md:items-center',
+  footerExploreHeading:
+    'mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-500',
+  footerNavCol: 'flex w-full flex-col items-center space-y-3 md:items-center',
+  footerNavLinkButton: cn(
+    'group cursor-pointer border-0 bg-transparent p-0 text-left font-inherit text-sm',
+    'transition-all duration-300',
     FOCUS_RING,
+    'rounded-sm',
   ),
-  footerAsideStack: cn(SP.stackMd, 'md:text-right'),
-  footerAsideLabel: cn(
-    'font-mono text-[10px] font-semibold tracking-wide text-zinc-500 dark:text-zinc-500',
+  footerNavLinkRow: cn(
+    'inline-flex items-center gap-2',
+    'transition-transform duration-300 motion-safe:group-hover:translate-x-1',
   ),
-  footerInterestList: cn(SP.insetTop3, 'flex list-none flex-wrap gap-2 p-0 md:justify-end'),
-  footerInterestPill: cn(
-    'inline-flex items-center rounded-full border border-indigo-500/20 bg-white/70 px-3 py-1.5 text-xs font-medium text-zinc-800 shadow-sm shadow-zinc-900/[0.04] dark:border-indigo-400/20 dark:bg-white/[0.06] dark:text-zinc-200 dark:shadow-none',
+  footerNavIcon:
+    'h-4 w-4 shrink-0 text-zinc-500 transition-all duration-300 group-hover:text-white',
+  footerNavLabel: cn(
+    'relative inline-block text-zinc-400 transition-colors duration-300 group-hover:text-white',
+    "after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-indigo-400 after:transition-all after:duration-300 after:content-['']",
+    'group-hover:after:w-full',
   ),
+  footerSocialCol: 'flex flex-col items-center space-y-3 md:items-end',
+  footerSocialLink: cn(
+    'group inline-flex items-center gap-2 text-sm text-zinc-400',
+    'transition-all duration-300',
+    'motion-safe:group-hover:drop-shadow-[0_0_6px_rgba(99,102,241,0.4)]',
+    'group-hover:text-white',
+    FOCUS_RING,
+    'rounded-sm',
+  ),
+  footerSocialIcon: cn(
+    'h-4 w-4 shrink-0 text-zinc-400 transition-all duration-300',
+    'motion-safe:group-hover:scale-110 group-hover:text-white',
+  ),
+  footerSignature: 'mt-10 max-w-md text-sm text-zinc-500',
   footerBottomBar: cn(
-    SP.insetTop12,
-    'border-t border-zinc-200/70 pt-10 dark:border-white/[0.1]',
+    'mt-12 flex flex-col gap-4 border-t border-zinc-800/80 pt-6',
+    'sm:flex-row sm:items-center sm:justify-between',
   ),
-  footerCopyrightLine: 'flex flex-wrap items-center gap-x-2 gap-y-1 text-sm',
-  footerCopyrightAccent: 'font-semibold text-indigo-600 dark:text-indigo-400',
-  footerCopyrightSep: 'text-zinc-300 dark:text-zinc-600',
-  footerCopyrightBody: 'font-medium text-zinc-700 dark:text-zinc-300',
-  footerCopyrightMuted: 'text-xs font-normal text-zinc-500 dark:text-zinc-500',
+  footerCopyrightLine: 'text-xs text-zinc-500',
+  footerBuiltWith: 'text-xs text-zinc-500',
   sectionHeader: SP.sectionHeaderMargin,
-  sectionH2: cn(SP.insetTop3, 'max-w-3xl'),
-  sectionIntro: cn(SP.insetTop5, 'max-w-2xl'),
-  footerRow: cn('flex flex-col md:flex-row md:items-start md:justify-between', SP.inlineGap10),
+  sectionH2: cn(SP.insetTop4, 'max-w-3xl'),
+  sectionIntro: cn(SP.insetTop6, 'max-w-xl'),
   cardPad: 'p-6 md:p-7',
 
-  rhythmHeroH1: SP.insetTop5,
+  rhythmHeroH1: SP.insetTop6,
   rhythmHeroSubhead: cn(SP.insetTop7, 'max-w-[34rem]'),
-  /** Framing line after subhead (section nav lives in site header) */
-  heroRouteIntro: cn(SP.insetTop6, 'max-w-[36rem] text-sm leading-relaxed text-zinc-500 dark:text-zinc-500'),
+  heroRouteIntro: cn(SP.insetTop6, 'max-w-[36rem] text-sm leading-relaxed text-zinc-400'),
   rhythmHeroProof: SP.insetTop10,
-  rhythmHeroCTA: cn(SP.insetTop12, 'flex flex-wrap items-center', SP.inlineGap3),
-  /** Primary hero column — optimal headline measure (~42rem), grid-safe */
-  heroCopy: 'min-w-0 w-full max-w-[42rem]',
-  /**
-   * Hero shell: mobile = copy then card (single column, tight gap);
-   * md+ = two columns, text + glance aligned to start; horizontal gap only (no dead vertical void).
-   */
+  rhythmHeroCTA: cn(SP.insetTop16, 'flex flex-wrap items-center', SP.inlineGap4),
+  heroHighlightList: cn(SP.insetTop14, 'm-0 max-w-xl list-none p-0', SP.stackMd),
+  heroHighlightItem:
+    'relative pl-[1.125rem] text-[0.9375rem] font-medium leading-relaxed text-zinc-400 before:absolute before:left-0 before:top-[0.45em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-indigo-400',
+  btnPrimaryProminent: cn(
+    'px-6 py-3 text-[15px] font-semibold',
+    SHADOW_PRIMARY_GLOW,
+    'ring-1 ring-indigo-400/30',
+    'hover:brightness-[1.04] motion-safe:hover:scale-[1.01] transition-[transform,filter,box-shadow] duration-300 ease-out',
+  ),
+  heroCopy: 'min-w-0 w-full max-w-[min(36rem,100%)]',
   heroLayout: cn(
     SP.heroPadTop,
     SP.heroPadBottom,
-    'grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,1fr)_minmax(260px,300px)] md:items-start md:gap-x-10 md:gap-y-0 lg:gap-x-14',
+    'grid grid-cols-1 gap-14 md:grid-cols-[minmax(0,1fr)_minmax(280px,320px)] md:items-start md:gap-x-14 md:gap-y-0 lg:gap-x-[4.5rem]',
   ),
-  /** Glance column: full width in grid cell; slight downward offset on md+ so card doesn’t fight the headline */
-  heroGlanceAside: cn(
-    'w-full max-w-md md:max-w-none',
-    'md:pt-6 lg:pt-8',
-  ),
+  heroGlanceAside: cn('w-full max-w-md md:max-w-none', 'md:pt-6 lg:pt-8'),
   heroGlanceMetaKey:
-    'shrink-0 font-mono text-[10px] font-medium tracking-wide text-zinc-400 dark:text-zinc-600',
-  heroGlanceMetaValue: 'text-right text-xs text-zinc-600 dark:text-zinc-400',
-  rhythmHeroSocial: cn(SP.insetTop14, 'flex items-center', SP.inlineGap4),
+    'shrink-0 font-mono text-[10px] font-medium tracking-wide text-zinc-500',
+  heroGlanceMetaValue: 'text-right text-xs font-medium text-zinc-300',
+  rhythmHeroSocial: cn(SP.insetTop16, 'flex items-center', SP.inlineGap4),
   rhythmHeroSocialIcons: cn('flex', SP.inlineGap2),
-  heroGlanceLabel: cn(
-    'font-mono text-[10px] font-medium tracking-wide text-zinc-400 dark:text-zinc-600',
-  ),
-  heroGlanceName: cn(SP.insetTop4, 'text-lg font-semibold tracking-tight text-zinc-800 dark:text-zinc-100'),
-  heroGlanceRole: cn(SP.insetTop1, 'text-sm text-zinc-500 dark:text-zinc-500'),
-  heroGlanceBlock: cn(SP.insetTop6, SP.stackSm, SP.padTopLoose, 'border-t border-zinc-200/75 dark:border-white/[0.07]'),
+  heroGlanceLabel: cn('font-mono text-[10px] font-medium tracking-wide text-zinc-500'),
+  heroGlanceName: cn(SP.insetTop4, 'text-lg font-semibold tracking-tight text-white'),
+  heroGlanceRole: cn(SP.insetTop1, 'text-sm text-zinc-400'),
+  heroGlanceBlock: cn(SP.insetTop6, SP.stackSm, SP.padTopLoose, 'border-t border-zinc-800'),
   rhythmHeroPanelRow: cn('flex justify-between items-baseline', SP.inlineGap4),
   rhythmContactRow: cn('flex', SP.inlineGap4),
   rhythmContactBody: cn(SP.insetTop1, 'text-sm'),
   rhythmCardAfterTitle: SP.insetTop4,
   rhythmCardSubtitle: cn(SP.insetTop1, 'text-sm'),
   rhythmCardTags: cn('mt-auto flex flex-wrap pt-6', SP.inlineGap2),
-  chipList: cn(SP.insetTop5, 'flex flex-wrap', SP.inlineGap2),
-  rhythmAfterKickerNeutral: cn(SP.insetTop4, 'flex flex-wrap', SP.inlineGap2),
-  educationItem: 'border-l-2 border-zinc-200 pl-4 dark:border-white/[0.08]',
+  skillItemList: cn(SP.insetTop5, 'm-0 flex flex-wrap gap-2.5 p-0', 'list-none'),
+  skillItem: cn(
+    'flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/60 px-3 py-2 text-sm text-zinc-300',
+    'transition-all duration-300 hover:border-indigo-500 hover:bg-zinc-800',
+  ),
+  /** Fixed 16×16 slot so text-only rows align with [icon + gap] rows */
+  skillItemIconSlot: 'inline-flex h-4 w-4 shrink-0 items-center justify-center',
+  skillItemSi: 'text-zinc-400',
+  skillItemHighlight: 'border-indigo-500/40 text-white',
+  educationItem: 'border-l-2 border-zinc-800 pl-4',
   gridSpan2: 'sm:col-span-2',
   textareaField: 'min-h-[120px] resize-y',
-  /** Visually hidden; keep in DS (no raw utility classes in JSX) */
   srOnly: 'sr-only',
-  /** Honeypot: not displayed, not focusable, ignored by autocomplete */
   formHoneypot: 'hidden select-none',
 
   bodyRoot:
-    'min-h-screen bg-zinc-50 font-sans text-zinc-600 antialiased dark:bg-zinc-950 dark:text-zinc-400 selection:bg-indigo-500/25 selection:text-zinc-900 dark:selection:bg-indigo-400/20 dark:selection:text-white [font-optical-sizing:auto]',
+    'min-h-screen bg-zinc-950 font-sans text-zinc-400 antialiased selection:bg-indigo-500/30 selection:text-zinc-100 [font-optical-sizing:auto]',
 
-  textPrimary: 'text-zinc-900 dark:text-white',
-  textSecondary: 'text-zinc-500 dark:text-zinc-400',
-  textMuted: 'text-zinc-400 dark:text-zinc-500',
-  textTertiary: 'text-zinc-700 dark:text-zinc-300',
-  textStrongMuted: 'text-zinc-800 dark:text-zinc-200',
-  textLabel: 'text-xs font-semibold tracking-normal text-zinc-500 dark:text-zinc-500',
+  textPrimary: 'text-white',
+  textSecondary: 'text-zinc-400',
+  textMuted: 'text-zinc-500',
+  textTertiary: 'text-zinc-300',
+  textStrongMuted: 'text-zinc-200',
+  textLabel: 'text-xs font-semibold tracking-normal text-zinc-400',
   linkAccent: cn(
-    'rounded-sm font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400',
+    'rounded-sm font-semibold text-indigo-400 underline-offset-2 hover:underline',
     FOCUS_RING,
   ),
   textFooterBlurb: cn(SP.insetTop2, 'text-sm leading-relaxed'),
   textFooterCopyright: cn(SP.insetTop8, 'font-mono text-[11px]'),
 
-  borderSubtle: 'border-zinc-200 dark:border-white/10',
-  borderCard: 'border-zinc-200/90 dark:border-white/[0.06]',
-  borderHairline: 'border-zinc-200/80 dark:border-white/[0.06]',
-  ringImage: 'ring-1 ring-zinc-200/80 dark:ring-white/[0.08]',
-  borderLeftStrong: 'border-l-2 border-zinc-200 dark:border-white/[0.08]',
-  borderTopHairline: 'border-t border-zinc-200/80 dark:border-white/[0.06]',
+  borderSubtle: 'border-zinc-800',
+  borderCard: 'border-zinc-800',
+  borderHairline: 'border-zinc-800',
+  ringImage: 'ring-1 ring-zinc-800',
+  borderLeftStrong: 'border-l-2 border-zinc-800',
+  borderTopHairline: 'border-t border-zinc-800',
 
-  surfaceHeaderScrolled:
-    'border-b border-zinc-200/90 bg-zinc-50/85 shadow-sm shadow-zinc-900/[0.04] backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/85 dark:shadow-black/25',
-  surfaceMobileNav: 'border-t border-zinc-200 bg-zinc-50 dark:border-white/10 dark:bg-zinc-950',
+  /** Nav — glass bar, always readable over hero */
+  navHeaderIdle: cn(
+    'border-b border-zinc-800/40 bg-zinc-950/65 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl backdrop-saturate-150',
+  ),
+  surfaceHeaderScrolled: cn(
+    'border-b border-zinc-800 bg-zinc-950/92 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl backdrop-saturate-150',
+  ),
+  surfaceMobileNav: cn('border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-xl'),
+  /** Floating glass card — default shell */
   surfaceCard: cn(
-    'rounded-2xl border border-zinc-200/88 bg-white shadow-md shadow-zinc-900/[0.045] ring-1 ring-zinc-900/[0.03] dark:border-white/[0.08] dark:bg-white/[0.035] dark:shadow-lg dark:shadow-black/25 dark:ring-white/[0.06]',
+    'rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl',
+    SHADOW_FLOAT,
+    'ring-1 ring-white/[0.04]',
   ),
-  surfaceCardMuted:
-    'rounded-2xl border border-zinc-200/85 bg-zinc-50/70 p-6 shadow-sm shadow-zinc-900/[0.03] ring-1 ring-zinc-900/[0.02] dark:border-white/[0.06] dark:bg-white/[0.04] dark:shadow-none dark:ring-white/[0.04] md:p-7',
-  surfaceForm:
-    'rounded-2xl border border-zinc-200/85 bg-white/80 p-8 shadow-md shadow-zinc-900/[0.05] ring-1 ring-zinc-900/[0.03] backdrop-blur-sm dark:border-white/[0.08] dark:bg-zinc-900/40 dark:shadow-black/30 dark:ring-white/[0.06] md:p-9',
+  surfaceCardMuted: cn(
+    'rounded-2xl border border-zinc-800 bg-zinc-900/75 backdrop-blur-xl p-6 md:p-7',
+    SHADOW_FLOAT,
+    'ring-1 ring-white/[0.035]',
+  ),
+  surfaceForm: cn(
+    'rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl p-5 md:p-6',
+    SHADOW_FLOAT,
+    'ring-1 ring-white/[0.04]',
+  ),
   surfaceIconBox: cn(
-    'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-zinc-200/88 bg-white/90 shadow-sm shadow-zinc-900/[0.04] ring-1 ring-zinc-900/[0.02] dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none dark:ring-white/[0.05]',
+    'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/70 backdrop-blur-md',
+    'shadow-[0_6px_24px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.03]',
   ),
 
-  kicker: 'font-mono text-[11px] font-medium tracking-wide text-indigo-600 dark:text-indigo-400',
-  /** Section headers — editorial rule + weight vs hero kicker */
+  kicker: 'font-mono text-[11px] font-medium tracking-wide text-indigo-400',
   sectionKicker: cn(
-    'border-l-2 border-indigo-500/50 pl-3 font-mono text-[11px] font-semibold tracking-wide text-indigo-600 dark:border-indigo-400/45 dark:text-indigo-400',
+    'border-l-2 border-indigo-400/50 pl-3 font-mono text-[11px] font-semibold tracking-wide text-indigo-400',
   ),
-  /** Hero eyebrow — muted so the headline owns the moment */
-  kickerHero: cn(
-    'font-mono text-[11px] font-medium tracking-wide text-zinc-500 dark:text-zinc-500',
-  ),
-  kickerNeutral: 'font-mono text-[11px] font-medium tracking-wide text-zinc-500 dark:text-zinc-500',
-  h1: 'text-[2.2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-zinc-900 sm:text-5xl lg:text-[3.15rem] lg:leading-[1.05] dark:text-white',
-  /** Hero headline — solid, high contrast, statement-first (premium minimal) */
+  kickerHero: cn('font-mono text-[11px] font-medium tracking-wide text-zinc-400'),
+  kickerNeutral: 'font-mono text-[11px] font-medium tracking-wide text-zinc-500',
+  h1: 'text-[2.2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-white sm:text-5xl lg:text-[3.15rem] lg:leading-[1.05]',
   h1Hero:
-    'text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.042em] text-zinc-950 sm:text-[2.75rem] sm:leading-[1.04] lg:text-[3.25rem] lg:leading-[1.02] dark:text-white',
-  h2: 'text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.022em] text-zinc-900 sm:text-3xl sm:leading-[1.14] md:text-[2.25rem] md:leading-[1.12] lg:text-4xl lg:leading-[1.1] dark:text-white',
-  h3: 'text-lg font-semibold tracking-tight text-zinc-900 dark:text-white',
-  h3Plain: 'text-lg font-semibold text-zinc-900 dark:text-white',
-  body: 'text-base leading-[1.65] text-zinc-600 dark:text-zinc-400',
-  bodyLarge: 'text-[1.05rem] leading-[1.65] text-zinc-600 dark:text-zinc-400',
-  /** Hero subhead — sits between headline and body; slightly more presence */
-  heroLead:
-    'text-[1.0625rem] font-normal leading-[1.62] text-zinc-600 sm:text-[1.125rem] dark:text-zinc-400',
-  /** Section intros — readable measure; distinct from H2 */
-  sectionIntroText: 'text-[1.02rem] leading-[1.7] text-zinc-600 dark:text-zinc-400',
-  asideLabel: 'font-mono text-[10px] font-medium tracking-wide text-zinc-500 dark:text-zinc-500',
+    'max-w-[min(100%,42rem)] text-balance text-[2.65rem] font-semibold leading-[1.04] tracking-[-0.045em] text-white sm:text-[3rem] sm:leading-[1.03] lg:text-[3.5rem] lg:leading-[1.02]',
+  /** One highlighted word in the hero headline */
+  heroHeadlineAccent:
+    'bg-gradient-to-r from-indigo-200 via-indigo-400 to-indigo-300 bg-clip-text text-transparent',
+  h2: 'text-[1.95rem] font-semibold leading-[1.08] tracking-[-0.03em] text-white sm:text-[2.1rem] md:text-[2.4rem] lg:text-[2.65rem] lg:leading-[1.06]',
+  h3: 'text-lg font-semibold tracking-tight text-white',
+  h3Plain: 'text-lg font-semibold text-white',
+  body: 'text-base leading-[1.65] text-zinc-400',
+  bodyLarge: 'text-[1.05rem] leading-[1.65] text-zinc-400',
+  heroLead: 'text-[1.0625rem] font-normal leading-[1.62] text-zinc-400 sm:text-[1.125rem]',
+  sectionIntroText: 'text-[1.02rem] leading-relaxed text-zinc-400',
+  asideLabel: 'font-mono text-[10px] font-medium tracking-wide text-zinc-500',
   profilesLabel: 'font-mono text-[10px] tracking-wide',
-  monoMeta: 'font-mono text-[11px] text-zinc-500 dark:text-zinc-500',
-  monoMetaXs: 'font-mono text-[10px] tracking-wide text-zinc-400 dark:text-zinc-500',
-  caseStudyDt: 'font-mono text-[10px] tracking-wide text-zinc-500 dark:text-zinc-500',
-  metaProjectStack: 'font-mono text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-500',
+  monoMeta: 'font-mono text-[11px] text-zinc-500',
+  monoMetaXs: 'font-mono text-[10px] tracking-wide text-zinc-500',
 
   navLink: cn(
-    'group relative rounded-md px-3 py-2 text-[13px] font-medium text-zinc-600 transition-colors duration-200 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white',
+    'group relative rounded-md px-3 py-2 text-[13px] font-medium text-zinc-400 transition-colors duration-200 hover:text-white',
     FOCUS_RING,
   ),
   navLinkActive: cn(
-    'relative rounded-md px-3 py-2 text-[13px] font-semibold text-indigo-600 transition-colors duration-200 dark:text-indigo-400',
+    'relative rounded-md px-3 py-2 text-[13px] font-semibold text-indigo-400 transition-colors duration-200',
     FOCUS_RING,
   ),
   navUnderline:
-    'absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-indigo-500 transition-transform duration-200 ease-out group-hover:scale-x-100 dark:bg-indigo-400',
+    'absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-indigo-400 transition-transform duration-300 ease-out group-hover:scale-x-100',
   navUnderlineActive:
-    'absolute bottom-1 left-3 right-3 h-px origin-left scale-x-100 bg-indigo-500 dark:bg-indigo-400',
+    'absolute bottom-1 left-3 right-3 h-px origin-left scale-x-100 bg-indigo-400 transition-transform duration-300 ease-out',
   navBrand: cn(
-    'min-w-0 shrink text-sm font-semibold tracking-tight transition-opacity duration-200 hover:opacity-80',
+    'min-w-0 shrink text-sm font-semibold tracking-tight text-white transition-opacity duration-200 hover:opacity-90',
   ),
-  navBrandActive: 'text-indigo-600 dark:text-indigo-400',
-  navMobileLinkActive: 'text-indigo-600 dark:text-indigo-400',
+  navBrandActive: 'text-indigo-400',
+  navMobileLinkActive: 'text-indigo-400',
   navTray: cn('flex items-center', SP.inlineGapMicro),
+  navBrandTextSm: 'sm:hidden',
+  navBrandTextMd: 'hidden sm:inline',
+  navDesktop: 'hidden items-center md:flex',
+  navMobileNavStack: 'flex flex-col',
   navMobileSheetPad: SP.padYSm,
-  navMobileLink: cn(SP.padYSm, 'text-left text-sm font-medium'),
-  iconButton: cn(
-    'rounded-lg p-2 text-zinc-500 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/[0.06] dark:hover:text-white',
-    FOCUS_RING,
-  ),
+  navMobileLink: cn(SP.padYSm, 'text-left text-sm font-medium text-zinc-300'),
+  iconButton: iconButtonBase,
+  iconButtonMdHidden: cn(iconButtonBase, 'md:hidden'),
 
   focusRing: FOCUS_RING,
   btnBase:
     'inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold tracking-tight transition-[transform,box-shadow,background-color,border-color,opacity,color] duration-200 ease-out will-change-transform disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-colors',
   btnLoading: 'cursor-wait opacity-90',
   iconSpin: 'h-4 w-4 shrink-0 animate-spin',
-  btnPrimary:
-    'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-1 ring-indigo-400/30 hover:bg-indigo-500 hover:shadow-xl hover:shadow-indigo-600/35 hover:ring-indigo-300/40 active:brightness-[0.97] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98] dark:bg-indigo-500 dark:shadow-indigo-500/30 dark:ring-indigo-400/25 dark:hover:bg-indigo-400 dark:hover:shadow-indigo-500/40 dark:hover:ring-indigo-300/35',
+  btnPrimary: cn(
+    'bg-indigo-500 text-white ring-1 ring-indigo-400/40',
+    SHADOW_PRIMARY_GLOW,
+    'hover:bg-indigo-400 hover:brightness-[1.05] hover:shadow-[0_0_22px_rgba(99,102,241,0.32)] hover:ring-indigo-300/45',
+    'motion-safe:hover:scale-[1.01] motion-safe:active:scale-[0.99] transition-[transform,filter,box-shadow] duration-300 ease-out',
+  ),
   btnSecondary:
-    'border border-zinc-200/80 bg-transparent text-zinc-700 shadow-none ring-0 hover:border-zinc-300 hover:bg-zinc-100/60 hover:shadow-sm hover:shadow-zinc-900/[0.04] motion-safe:active:scale-[0.99] dark:border-white/10 dark:bg-transparent dark:text-zinc-300 dark:hover:border-white/18 dark:hover:bg-white/[0.05] dark:hover:shadow-none',
+    'border border-zinc-700/90 bg-transparent text-zinc-300 shadow-none ring-0 hover:border-zinc-600 hover:bg-zinc-800/50 hover:text-white motion-safe:active:scale-[0.99]',
   btnGhost:
-    'font-medium text-zinc-600 hover:bg-zinc-100/80 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.08] dark:hover:text-white',
+    'font-medium text-zinc-400 hover:bg-zinc-800/80 hover:text-zinc-100',
   btnGhostPadX: SP.padXContentTight,
-  btnProjectExpand: cn(SP.insetTop6, 'w-full py-2 text-xs sm:w-auto sm:self-start', SP.padXContentTight),
 
+  /** Subtle radial focus — slow breathe via `.hero-radial-breathe` in index.css */
+  heroRadialGlow: cn(
+    'hero-radial-breathe pointer-events-none absolute left-1/2 top-[-20%] h-[min(85vh,52rem)] w-[min(140vw,90rem)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_55%_45%_at_50%_35%,rgba(99,102,241,0.14)_0%,transparent_62%)] blur-3xl will-change-[opacity]',
+  ),
   heroGlowPrimary:
-    'absolute -left-1/3 top-[-10%] h-[48vh] w-[68vw] rounded-full bg-indigo-500/[0.055] blur-[130px] dark:bg-indigo-400/[0.08]',
+    'absolute -left-1/3 top-[-10%] h-[48vh] w-[68vw] rounded-full bg-indigo-500/[0.06] blur-[130px]',
   heroGlowSecondary:
-    'absolute -right-1/4 bottom-[-8%] h-[40vh] w-[52vw] rounded-full bg-zinc-400/[0.05] blur-[110px] dark:bg-zinc-500/[0.06]',
+    'absolute -right-1/4 bottom-[-8%] h-[40vh] w-[52vw] rounded-full bg-zinc-600/[0.05] blur-[110px]',
   heroGlowAccent:
-    'absolute left-1/3 top-1/3 h-[min(48vh,380px)] w-[min(85vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-400/[0.035] blur-[110px] dark:bg-indigo-400/[0.05]',
+    'absolute left-1/2 top-[15%] h-[min(42vh,28rem)] w-[min(90vw,44rem)] -translate-x-1/2 rounded-full bg-indigo-400/[0.045] blur-[100px]',
   heroMesh:
-    'absolute inset-0 bg-gradient-to-b from-zinc-50 via-zinc-50/95 to-zinc-100/40 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900/85',
+    'absolute inset-0 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-zinc-900',
   heroVignette:
-    'absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-zinc-200/20 dark:via-transparent dark:to-black/30',
+    'pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/35',
   heroDecorLayer: 'pointer-events-none absolute inset-0 z-0 overflow-hidden',
   heroContentLayer: 'relative z-[1]',
   heroSection: cn(
-    'relative min-h-[100dvh] overflow-hidden bg-zinc-50 dark:bg-zinc-950',
+    'relative min-h-[100dvh] overflow-hidden bg-zinc-950',
     SP.padTopNavClear,
   ),
-  /** Secondary glance card — lighter elevation than former hero panel */
   heroGlanceCard: cn(
-    'relative overflow-hidden rounded-xl border border-zinc-200/70 bg-white/70 shadow-sm shadow-zinc-900/[0.04] ring-1 ring-zinc-900/[0.03] backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none dark:ring-white/[0.05]',
+    'relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl',
+    SHADOW_FLOAT,
+    'ring-1 ring-white/[0.04]',
     SP.padHeroGlance,
   ),
   heroGlanceSheen:
-    'pointer-events-none absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-indigo-500/[0.04] dark:from-white/[0.03] dark:to-indigo-500/[0.05]',
+    'pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-indigo-500/[0.06]',
   heroGlanceGlow:
-    'pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-indigo-400/12 blur-2xl dark:bg-indigo-400/10',
-  proofList: cn(SP.stackSmPlus, 'max-w-[36rem] border-l border-zinc-300/90 pl-5 dark:border-white/[0.12]'),
-  proofListItem:
-    'text-sm font-normal leading-snug text-zinc-600 md:text-[0.95rem] md:leading-[1.55] dark:text-zinc-500',
+    'pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-indigo-500/15 blur-2xl',
+  proofList: cn(SP.stackSmPlus, 'max-w-[36rem] border-l border-zinc-700 pl-5'),
+  proofListItem: 'text-sm font-normal leading-snug text-zinc-400 md:text-[0.95rem] md:leading-[1.55]',
 
   timelineLine:
-    'absolute left-[4px] top-2 bottom-2 w-px bg-gradient-to-b from-indigo-500/40 via-zinc-200 to-zinc-200 dark:from-indigo-400/30 dark:via-white/10 dark:to-white/[0.06]',
+    'absolute left-[4px] top-2 bottom-2 w-px bg-gradient-to-b from-indigo-400/35 via-zinc-700 to-zinc-800',
   timelineDot:
-    'absolute left-0 top-1.5 z-[1] h-2.5 w-2.5 rounded-full border-2 border-indigo-500 bg-zinc-50 dark:border-indigo-400 dark:bg-zinc-950',
-  bulletDot: 'mt-2 h-1 w-1 shrink-0 rounded-full bg-indigo-500 dark:bg-indigo-400',
+    'absolute left-0 top-1.5 z-[1] h-2.5 w-2.5 rounded-full border-2 border-indigo-400 bg-zinc-950',
+  bulletDot: 'mt-2 h-1 w-1 shrink-0 rounded-full bg-indigo-400',
   timelineRow: cn('reveal-on-view relative last:pb-0', SP.padBottomTimeline, SP.padLeftTimeline),
 
   gridAbout: cn('grid lg:grid-cols-[minmax(0,280px)_1fr]', SP.gridGapLg),
+  aboutLayout: cn('grid gap-10 md:gap-12', 'lg:grid-cols-[minmax(0,1fr)_minmax(0,240px)] lg:items-start lg:gap-x-12 xl:gap-x-16'),
+  aboutCopyStack: cn(SP.stackXl),
+  aboutBulletList: cn('m-0 max-w-2xl list-none p-0', SP.stackMd),
+  aboutBulletItem: cn('flex text-[0.9375rem] leading-snug text-zinc-300', SP.inlineGap3),
+  strengthsBlock: cn(SP.insetTop2, 'border-t border-zinc-800 pt-8'),
+  strengthsChipList: cn(SP.insetTop4, 'm-0 flex list-none flex-wrap p-0', SP.inlineGap2),
+  aboutContactGrid: cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:gap-5'),
   gridExperience: cn('grid lg:grid-cols-[1fr_minmax(0,220px)]', SP.gridGapXl),
+  experienceTimelineOuter: 'relative',
+  experienceTimelineInner: 'relative',
   gridTwoUp: cn('grid sm:grid-cols-2', SP.gridGapMd),
-  gridProjects: cn('grid lg:grid-cols-2', SP.gridGapMd),
+  gridProjects: cn(
+    'grid grid-cols-1 lg:grid-cols-2',
+    'gap-6 sm:gap-7 lg:gap-x-8 lg:gap-y-8 xl:gap-x-10',
+    'items-stretch',
+  ),
+  projectCardChrome: cn(
+    'border-zinc-800 bg-zinc-900/85 backdrop-blur-xl !shadow-[0_10px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/[0.04]',
+  ),
+  projectCardInteractive: cn(
+    'group h-full transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+    'motion-safe:hover:-translate-y-1.5',
+    'hover:border-indigo-500/80 hover:!shadow-[0_24px_56px_rgba(0,0,0,0.72)] hover:shadow-indigo-500/10',
+    'motion-reduce:transition-colors motion-reduce:hover:translate-y-0',
+  ),
+  projectCardPad: '!p-7 md:!p-9',
+  projectCardShell: 'flex h-full min-h-0 flex-col',
+  projectCardArticle: 'flex min-h-0 flex-1 flex-col',
+  projectCardHeader: cn('flex flex-wrap items-start justify-between gap-x-3 gap-y-2'),
+  projectCardTitle:
+    'min-w-0 flex-1 text-[1.2rem] font-semibold leading-snug tracking-tight text-white sm:text-xl sm:leading-tight',
+  projectStatusBadge:
+    'shrink-0 rounded-md border border-zinc-700 bg-zinc-800/80 px-2 py-0.5 text-[11px] font-semibold text-zinc-300',
+  projectHook: cn(
+    SP.insetTop5,
+    'max-w-xl text-[0.9375rem] font-medium leading-relaxed text-zinc-400 sm:text-base',
+  ),
+  projectHighlightsBlock: SP.insetTop6,
+  projectHighlightsLabel: cn('text-[11px] font-semibold tracking-wide text-zinc-500'),
+  projectFeatureList: cn(SP.insetTop3, 'm-0 list-none p-0', SP.stackDense),
+  projectFeatureRow: cn('flex text-[0.8125rem] leading-snug text-zinc-400', SP.inlineGap2),
+  projectCardFooter: cn(
+    'mt-auto flex flex-col gap-4 border-t border-zinc-800 pt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-5',
+  ),
+  projectTechInline:
+    'min-w-0 text-[0.8125rem] font-medium leading-relaxed tracking-tight text-zinc-500',
+  projectViewCodeButton: cn(
+    'shrink-0 self-end sm:self-auto !px-7 !py-3.5',
+    SHADOW_PRIMARY_GLOW,
+    '!ring-1 !ring-indigo-400/30',
+    'motion-safe:hover:scale-[1.01] hover:brightness-[1.04] motion-safe:active:scale-[0.99] motion-reduce:hover:scale-100',
+    'hover:!shadow-[0_0_22px_rgba(99,102,241,0.3)] transition-[transform,filter,box-shadow] duration-300 ease-out',
+    '[&_svg]:transition-transform [&_svg]:duration-300 [&_svg]:ease-out motion-safe:hover:[&_svg]:translate-x-1',
+  ),
+  iconSm: 'h-4 w-4 shrink-0',
+  /** Nav menu, scroll FAB — 20px */
+  iconMd: 'h-5 w-5 shrink-0',
+  /** Hero social row — GitHub / LinkedIn (18px matches tap target balance) */
+  iconHeroSocial: 'h-[18px] w-[18px] shrink-0',
   gridContact: cn('grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]', SP.gridGapContact),
   gridContactCards: cn('grid sm:grid-cols-2', SP.inlineGap4),
-  stackContactAside: SP.stackXl,
-  filterRow: cn(SP.insetBottom12, 'flex flex-wrap', SP.inlineGap2),
+  contactAsidePanel: cn(
+    'rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl p-4 md:p-5',
+    SHADOW_FLOAT,
+    'ring-1 ring-white/[0.04]',
+  ),
+  stackContactAside: SP.stackMd,
+  /** Slightly tighter vertical rhythm for contact section */
+  contactSectionTight: '!py-20 md:!py-24 lg:!py-28',
 
-  chip: 'rounded-md border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-xs text-zinc-700 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-zinc-300',
+  chip: 'rounded-md border border-zinc-700 bg-zinc-800/60 px-2.5 py-1 text-xs text-zinc-300',
   chipRound:
-    'rounded-full border border-zinc-200/90 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-300',
+    'rounded-full border border-zinc-700 bg-zinc-800/50 px-3 py-1.5 text-xs font-medium text-zinc-300',
   tagCategory:
-    'rounded-md bg-zinc-100 px-2 py-0.5 font-mono text-[10px] tracking-wide text-zinc-600 dark:bg-white/[0.06] dark:text-zinc-400',
+    'rounded-md bg-zinc-800 px-2 py-0.5 font-mono text-[10px] tracking-wide text-zinc-400',
   filterPill: cn(
-    'rounded-full border border-zinc-200/90 bg-white/40 px-4 py-2 text-xs font-medium text-zinc-600 shadow-sm shadow-zinc-900/[0.02] transition-[colors,box-shadow] duration-200 hover:border-zinc-300 hover:text-zinc-900 hover:shadow-md hover:shadow-zinc-900/[0.05] dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-zinc-400 dark:shadow-none dark:hover:border-white/15 dark:hover:text-white dark:hover:shadow-black/20',
+    'rounded-full border border-zinc-700 bg-zinc-900/80 px-4 py-2 text-xs font-medium text-zinc-400 shadow-sm shadow-black/20 transition-[colors,box-shadow] duration-200 hover:border-zinc-600 hover:text-zinc-200 hover:shadow-md hover:shadow-black/30',
     FOCUS_RING,
   ),
   filterPillActive: cn(
-    'rounded-full bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-zinc-900/20 ring-1 ring-zinc-800/30 dark:bg-white dark:text-zinc-900 dark:shadow-black/25 dark:ring-white/20',
+    'rounded-full border border-indigo-400/40 bg-indigo-500 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-500/25 ring-1 ring-indigo-400/30',
     FOCUS_RING,
   ),
   filterPillDisabled: 'cursor-not-allowed opacity-40',
 
   inputField: cn(
     SP.insetTop2,
-    'w-full rounded-xl border border-zinc-200/90 bg-white px-4 py-3 text-sm text-zinc-900 transition-colors duration-200 placeholder:text-zinc-400 focus:border-indigo-500/40 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 dark:border-white/[0.08] dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-600',
+    'w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 transition-colors duration-200 placeholder:text-zinc-600 focus:border-indigo-500/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/25',
   ),
-  labelField: 'text-xs font-semibold text-zinc-700 dark:text-zinc-300',
+  labelField: 'text-xs font-semibold text-zinc-300',
   formGrid: cn('grid sm:grid-cols-2', SP.formGap),
-  /** Turnstile wrapper — stable min-height reduces layout shift when the iframe mounts */
   turnstileBlock: cn(SP.insetTop6, 'w-full min-w-0'),
-  turnstileLabel: 'text-xs font-semibold text-zinc-700 dark:text-zinc-300',
+  turnstileLabel: 'text-xs font-semibold text-zinc-300',
   turnstileMount: 'min-h-[65px] w-full max-w-full overflow-hidden',
 
-  feedbackStatus: cn(SP.insetTop4, 'text-center text-sm text-zinc-500 dark:text-zinc-500'),
-  feedbackError: cn(SP.insetTop4, 'rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-700 dark:text-red-300'),
-  feedbackSuccess: cn(
-    SP.insetTop4,
-    'rounded-xl bg-indigo-500/10 px-4 py-3 text-center text-sm text-indigo-900 dark:text-indigo-200',
-  ),
-
-  caseStudyDd: cn(SP.insetTop1p5, 'text-sm leading-[1.65] text-zinc-600 dark:text-zinc-400'),
-  caseStudyStack: cn(SP.insetTop6, SP.stackMd, 'text-sm leading-relaxed'),
-  caseStudyCollapseGrid:
-    'grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none',
-  caseStudyCollapseClosed: 'grid-rows-[0fr]',
-  caseStudyCollapseOpen: 'grid-rows-[1fr]',
-  caseStudyCollapseInner: 'min-h-0 overflow-hidden',
-  caseStudyExpandDl: cn(SP.stackMd, 'text-sm leading-relaxed'),
-  caseStudyCollapseWrap: SP.insetTop4,
+  feedbackStatus: cn(SP.insetTop4, 'text-center text-sm text-zinc-500'),
+  feedbackError: cn(SP.insetTop4, 'rounded-xl bg-red-500/15 px-4 py-3 text-center text-sm text-red-300'),
+  feedbackSuccess: cn(SP.insetTop4, 'rounded-xl bg-indigo-500/15 px-4 py-3 text-center text-sm text-indigo-200'),
 
   socialCircle: cn(
-    'flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200/90 bg-white/60 text-zinc-600 shadow-sm shadow-zinc-900/[0.03] transition-[colors,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-indigo-500/25 hover:text-indigo-600 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:border-indigo-400/30 dark:hover:text-indigo-400 motion-reduce:hover:translate-y-0',
+    'flex h-10 w-10 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900/80 text-zinc-400 shadow-sm shadow-black/25 transition-[colors,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-indigo-500/40 hover:text-indigo-400 hover:shadow-md motion-reduce:hover:translate-y-0',
     FOCUS_RING,
   ),
   imageFallback:
-    'flex aspect-[4/5] max-w-md items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-zinc-900 text-4xl font-semibold tracking-tight text-indigo-200',
+    'flex aspect-[4/5] max-w-md items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/25 to-zinc-900 text-4xl font-semibold tracking-tight text-indigo-200',
   scrollFab: cn(
-    'fixed bottom-8 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 text-zinc-800 shadow-lg shadow-zinc-900/5 transition-colors duration-200 hover:border-indigo-500/40 hover:text-indigo-600 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:border-indigo-400/40 dark:hover:text-indigo-400',
+    'fixed bottom-8 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-zinc-200 shadow-lg shadow-black/40 transition-colors duration-200 hover:border-indigo-500/50 hover:text-indigo-400',
     FOCUS_RING,
   ),
 
-  contactCard:
-    'rounded-xl border border-zinc-200/80 bg-white/50 px-4 py-3 shadow-sm shadow-zinc-900/[0.03] ring-1 ring-zinc-900/[0.02] dark:border-white/[0.06] dark:bg-white/[0.02] dark:shadow-none dark:ring-white/[0.04]',
+  contactCard: cn(
+    'rounded-xl border border-zinc-800 bg-zinc-900/70 backdrop-blur-md px-4 py-3',
+    'shadow-[0_8px_32px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.03]',
+  ),
   stackAbout: SP.stack2xl,
   educationList: cn(SP.insetTop6, SP.stackLg),
   highlightList: cn(SP.insetTop5, SP.stackDense),
-  iconAccent: 'h-5 w-5 text-indigo-600 dark:text-indigo-400',
-  formActions: SP.insetTop8,
+  iconAccent: 'h-5 w-5 text-indigo-400',
+  formActions: SP.insetTop6,
   btnSubmitWidth: 'w-full sm:w-auto',
 
   experienceJobHeader: cn('flex flex-col sm:flex-row sm:items-baseline sm:justify-between', SP.inlineGapTight),
   experienceCompany: cn(SP.insetTop0p5, 'text-sm font-medium'),
   experienceLocation: cn(SP.insetTop1, 'text-xs'),
-  experienceSummary: cn(SP.insetTop4, 'text-sm leading-[1.65] text-zinc-600 dark:text-zinc-400'),
-  experienceHighlightRow: cn('flex text-sm leading-[1.6] text-zinc-600 dark:text-zinc-400', SP.inlineGap2),
+  experienceSummary: cn(SP.insetTop4, 'text-sm leading-[1.65] text-zinc-400'),
+  experienceHighlightRow: cn('flex text-sm leading-[1.6] text-zinc-400', SP.inlineGap2),
   educationAside: SP.padTopAsideLg,
+  educationDegree: 'text-sm font-semibold text-white',
   educationSchool: cn(SP.insetTop1, 'text-xs'),
   educationPeriod: SP.insetTop1,
   contactDd: cn(SP.insetTop1, 'text-sm'),
 
-  /** Responsive: hidden until `sm` (collapse on narrow viewports) */
   viewportRevealSm: 'hidden sm:block',
 
-  skeletonBar: 'animate-pulse rounded-md bg-zinc-200/80 dark:bg-white/[0.08]',
+  skeletonBar: 'animate-pulse rounded-md bg-zinc-800',
   skeletonBarSm: 'h-3',
   skeletonBarMd: 'h-4',
   skeletonBarLg: 'h-5',
   skeletonMaxNarrow: 'max-w-[42%]',
   skeletonMaxMid: 'max-w-[66%]',
   skeletonMaxWide: 'max-w-[92%]',
-  skeletonCard: cn('rounded-2xl border border-zinc-200/90 dark:border-white/[0.06]', SP.stackMd, SP.cardPad),
-  emptyStateWrap: cn(SP.stackMd, 'rounded-2xl border border-dashed border-zinc-200/90 bg-zinc-50/50 px-8 py-12 text-center dark:border-white/[0.08] dark:bg-white/[0.02]'),
-  emptyStateTitle: cn('text-base font-semibold', 'text-zinc-900 dark:text-white'),
-  emptyStateBody: 'text-sm text-zinc-500 dark:text-zinc-400',
+  skeletonCard: cn('rounded-2xl border border-zinc-800', SP.stackMd, SP.cardPad),
+  emptyStateWrap: cn(SP.stackMd, 'rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 px-8 py-12 text-center'),
+  emptyStateTitle: cn('text-base font-semibold', 'text-white'),
+  emptyStateBody: 'text-sm text-zinc-500',
   belowFoldFallback: cn(SP.stackXl, 'min-h-[50vh] py-12', SP.insetTop10),
-  belowFoldFallbackBar: cn('animate-pulse rounded-lg bg-zinc-200/70 dark:bg-white/[0.06]'),
+  belowFoldFallbackBar: cn('animate-pulse rounded-lg bg-zinc-800'),
   belowFoldFallbackKicker: 'h-8 w-44',
   belowFoldFallbackBlock: 'h-56 w-full',
   belowFoldFallbackWide: 'h-40 w-full',

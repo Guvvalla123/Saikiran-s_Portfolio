@@ -16,7 +16,7 @@ export function ScrollTopFab() {
 
   return (
     <button type="button" className={ds.scrollFab} aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-      <ArrowUp className="h-5 w-5" strokeWidth={1.75} />
+      <ArrowUp className={ds.iconMd} strokeWidth={1.75} />
     </button>
   )
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Menu, Moon, Sun, X } from 'lucide-react'
-import { useTheme } from '../../context/ThemeContext.jsx'
+import { Menu, X } from 'lucide-react'
 import { scrollToSection } from '../../lib/scroll.js'
 import { cn, ds } from '../../ds/classNames.js'
 
@@ -15,7 +14,6 @@ const NAV = [
 export function Navbar({ activeSection = 'hero' }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 12)
@@ -32,11 +30,11 @@ export function Navbar({ activeSection = 'hero' }) {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 w-full transition-[border-color,background-color,box-shadow] duration-300 ease-out',
-        scrolled ? ds.surfaceHeaderScrolled : 'border-b border-transparent bg-transparent',
+        ds.navHeaderFixed,
+        scrolled ? ds.surfaceHeaderScrolled : ds.navHeaderIdle,
       )}
     >
-      <div className={cn('flex h-16 items-center justify-between', ds.container)}>
+      <div className={ds.navBarInner}>
         <a
           href="#hero"
           onClick={(e) => {
@@ -46,12 +44,12 @@ export function Navbar({ activeSection = 'hero' }) {
           className={cn(ds.navBrand, ds.textPrimary, activeSection === 'hero' && ds.navBrandActive)}
           aria-current={activeSection === 'hero' ? 'location' : undefined}
         >
-          <span className="sm:hidden">SG</span>
-          <span className="hidden sm:inline">Saikiran Guvvalla</span>
+          <span className={ds.navBrandTextSm}>SG</span>
+          <span className={ds.navBrandTextMd}>Saikiran Guvvalla</span>
         </a>
 
         <div className={ds.navTray}>
-          <nav className="hidden items-center md:flex" aria-label="Primary">
+          <nav className={ds.navDesktop} aria-label="Primary">
             {NAV.map(({ id, label }) => {
               const isActive = activeSection === id
               return (
@@ -69,10 +67,6 @@ export function Navbar({ activeSection = 'hero' }) {
             })}
           </nav>
 
-          <button type="button" onClick={toggleTheme} className={cn(ds.iconButton, ds.insetStartSm)} aria-label="Toggle theme">
-            {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" strokeWidth={1.5} /> : <Moon className="h-[18px] w-[18px]" strokeWidth={1.5} />}
-          </button>
-
           <button type="button" className={cn(ds.iconButton, 'md:hidden')} aria-expanded={open} aria-label="Menu" onClick={() => setOpen((v) => !v)}>
             {open ? <X className="h-5 w-5" strokeWidth={1.5} /> : <Menu className="h-5 w-5" strokeWidth={1.5} />}
           </button>
@@ -81,7 +75,7 @@ export function Navbar({ activeSection = 'hero' }) {
 
       {open ? (
         <div className={cn(ds.surfaceMobileNav, ds.pageX, ds.navMobileSheetPad)}>
-          <nav className="flex flex-col" aria-label="Mobile">
+          <nav className={ds.navMobileNavStack} aria-label="Mobile">
             <button
               type="button"
               className={cn(ds.navMobileLink, ds.focusRing, ds.textPrimary, activeSection === 'hero' && ds.navMobileLinkActive)}

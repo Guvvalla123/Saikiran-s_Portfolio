@@ -9,13 +9,13 @@ export function ExperienceSection() {
       id="experience"
       surface="muted"
       kicker="Experience"
-      title="Where I’ve shipped impact."
-      intro="Enterprise MERN products, security-minded APIs, and operator-facing workflows — from intern to full stack owner."
+      title="What I’ve shipped."
+      intro="MERN apps for enterprise teams—APIs, permissions, and workflows people use every day. From intern to owning features on the same products."
     >
       <div className={ds.gridExperience}>
-        <div className="relative">
+        <div className={ds.experienceTimelineOuter}>
           <div className={ds.timelineLine} aria-hidden />
-          <div className="relative">
+          <div className={ds.experienceTimelineInner}>
             {experience.map((job, i) => (
               <TimelineRow key={job.id} index={i}>
                 <div className={ds.surfaceCardMuted}>
@@ -47,7 +47,7 @@ export function ExperienceSection() {
           <ul className={ds.educationList}>
             {education.map((e) => (
               <li key={e.degree} className={ds.educationItem}>
-                <p className={cn('text-sm font-semibold', ds.textPrimary)}>{e.degree}</p>
+                <p className={ds.educationDegree}>{e.degree}</p>
                 <p className={cn(ds.educationSchool, ds.textSecondary)}>{e.school}</p>
                 <p className={cn(ds.educationPeriod, ds.monoMeta)}>{e.period}</p>
               </li>

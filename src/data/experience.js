@@ -11,15 +11,15 @@ export const experience = [
     title: 'Full stack developer',
     period: 'Apr 2023 — Present',
     summary:
-      'MERN production systems: REST APIs, JWT/RBAC, workforce and recruitment platforms, and workflow tooling.',
+      'Production MERN work: REST APIs, JWT and role-based access, workforce and hiring products, plus internal workflow tools.',
     highlights: [
-      'Ship and maintain scalable apps on React, Node.js, Express, and MongoDB with clear layering and validation.',
-      'Design REST APIs for performance and maintainability; integrate clients with robust error handling and contracts.',
-      'Implement authentication, authorization, and secure data access across multi-tenant style enterprise products.',
+      'Ship and maintain production apps on React, Node.js, Express, and MongoDB with clear layering and validation.',
+      'Design REST APIs that stay easy to evolve; integrate clients with clear errors and stable contracts.',
+      'Handle authentication, authorization, and data access patterns for enterprise products with strict separation between customers.',
       'Deliver end-to-end features: dashboards, workflows, file handling, and asynchronous processing where needed.',
       'Tune MongoDB with schema design, indexing, and query optimization for reporting and operational loads.',
       'Apply security practices: input validation, API protection, and middleware-based controls.',
-      'Collaborate in Agile teams — sprint planning, code review, and production deployments.',
+      'Sprint planning, code review, and shipping to production with the team.',
     ],
   },
   {

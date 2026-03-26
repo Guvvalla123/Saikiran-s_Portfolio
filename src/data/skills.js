@@ -2,6 +2,9 @@
  * Technical skills — grouped from resume TECHNICAL SKILLS section.
  */
 
+export const skillsSectionIntro =
+  'What I reach for most: UI, APIs, auth, data modeling, and the bits that tie them together.'
+
 export const skillCategories = [
   {
     id: 'frontend',

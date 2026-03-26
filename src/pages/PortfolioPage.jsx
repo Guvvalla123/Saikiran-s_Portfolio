@@ -19,7 +19,7 @@ function BelowFoldFallback() {
 }
 
 const description =
-  'Full stack engineer (MERN): production REST APIs, JWT and RBAC, MongoDB, workforce and recruitment products. Hyderabad, India.'
+  'Full stack developer (MERN): REST APIs, auth, MongoDB, and React tools for real teams. Based in Hyderabad, India.'
 
 const personLd = {
   '@context': 'https://schema.org',
@@ -28,7 +28,6 @@ const personLd = {
   url: `${SITE_URL}/`,
   image: `${SITE_URL}/sai.png`,
   jobTitle: PERSON.title,
-  email: PERSON.email,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Hyderabad',

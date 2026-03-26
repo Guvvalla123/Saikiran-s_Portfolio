@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App.jsx'
-import { ThemeProvider } from './context/ThemeContext.jsx'
 import { ds } from './ds/classNames.js'
 
 document.body.className = ds.bodyRoot
@@ -13,9 +12,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
+        <App />
       </BrowserRouter>
     </HelmetProvider>
   </StrictMode>,

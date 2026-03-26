@@ -6,10 +6,11 @@ const SURFACE = {
   default: ds.sectionToneDefault,
   muted: ds.sectionToneMuted,
   wash: ds.sectionToneWash,
+  projects: ds.sectionToneProjects,
 }
 
 /**
- * @param {'default' | 'muted' | 'wash'} [surface] — alternating canvas for scroll rhythm
+ * @param {'default' | 'muted' | 'wash' | 'projects'} [surface] — alternating canvas for scroll rhythm
  */
 export function Section({ id, kicker, title, intro, children, className = '', surface = 'default' }) {
   const [ref, inView] = useInView({ rootMargin: '0px 0px -6% 0px' })
@@ -19,9 +20,16 @@ export function Section({ id, kicker, title, intro, children, className = '', su
     <section
       ref={ref}
       id={id}
-      className={cn(tone, ds.sectionY, ds.sectionReveal, inView && 'is-inview', className)}
+      className={cn(
+        ds.sectionRoot,
+        tone,
+        ds.sectionY,
+        ds.sectionReveal,
+        inView && ds.sectionRevealStateInView,
+        className,
+      )}
     >
-      <div className={ds.container}>
+      <div className={cn(ds.container, ds.sectionContent)}>
         <SectionHeader kicker={kicker} title={title} intro={intro} />
         {children}
       </div>

@@ -16,5 +16,11 @@ export const PERSON = {
   x: 'https://x.com/saikira69116823',
 }
 
-export const FOOTER_BLURB =
-  'MERN stack · REST APIs · JWT & RBAC · MongoDB · Workforce & recruitment products. Hyderabad, India.'
+export const FOOTER_DESCRIPTION =
+  'Backend systems and internal tools for real teams and daily workflows.'
+
+export const FOOTER_SIGNATURE =
+  'Building systems people rely on, day after day.'
+
+/** Monogram shown in the footer mark */
+export const FOOTER_INITIALS = 'SG'

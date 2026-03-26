@@ -73,3 +73,25 @@
   }
 }
 
+/* Hero — single slow radial pulse (opacity only; respects reduced motion) */
+@keyframes hero-radial-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.hero-radial-breathe {
+  animation: hero-radial-breathe 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-radial-breathe {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+

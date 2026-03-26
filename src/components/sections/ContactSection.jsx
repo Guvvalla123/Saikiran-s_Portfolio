@@ -4,7 +4,6 @@ import { Section } from '../shell/Section.jsx'
 import { Button } from '../ui/Button.jsx'
 import { FormField } from '../ui/FormField.jsx'
 import { TurnstileField } from '../ui/TurnstileField.jsx'
-import { useTheme } from '../../context/ThemeContext.jsx'
 import { PERSON } from '../../data/site.js'
 import {
   getContactCooldownMessage,
@@ -26,7 +25,6 @@ const WEB3_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || ''
 const TURNSTILE_SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY || '').trim()
 
 export function ContactSection() {
-  const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
@@ -118,13 +116,14 @@ export function ContactSection() {
   return (
     <Section
       id="contact"
-      surface="muted"
+      className={ds.contactSectionTight}
       kicker="Contact"
       title="Let’s build something reliable."
-      intro="Roles, contract work, or a technical conversation — reach out directly or use the form."
+      intro="Open to roles, contract work, or a technical chat—email me or use the form."
     >
       <div className={ds.gridContact}>
-        <div className={ds.stackContactAside}>
+        <div className={ds.contactAsidePanel}>
+          <div className={ds.stackContactAside}>
           {[
             { icon: MapPin, title: 'Location', body: PERSON.location },
             {
@@ -148,7 +147,7 @@ export function ContactSection() {
           ].map(({ icon: Icon, title, body }) => (
             <div key={title} className={ds.rhythmContactRow}>
               <div className={ds.surfaceIconBox}>
-                <Icon className={ds.iconAccent} strokeWidth={1.5} aria-hidden />
+                <Icon className={ds.iconAccent} strokeWidth={1.75} aria-hidden />
               </div>
               <div>
                 <p className={ds.textLabel}>{title}</p>
@@ -156,6 +155,7 @@ export function ContactSection() {
               </div>
             </div>
           ))}
+          </div>
         </div>
 
         <form
@@ -215,7 +215,7 @@ export function ContactSection() {
               <TurnstileField
                 key={turnstileEpoch}
                 siteKey={TURNSTILE_SITE_KEY}
-                theme={theme}
+                theme="dark"
                 onToken={setTurnstileToken}
                 className={ds.insetTop2}
               />
@@ -238,7 +238,7 @@ export function ContactSection() {
           ) : null}
 
           <div className={ds.formActions}>
-            <Button variant="primary" type="submit" className={ds.btnSubmitWidth} loading={loading}>
+            <Button variant="primary" type="submit" className={cn(ds.btnSubmitWidth, ds.btnPrimaryProminent)} loading={loading}>
               Send message
             </Button>
           </div>

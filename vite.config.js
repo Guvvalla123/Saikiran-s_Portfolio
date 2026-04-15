@@ -5,5 +5,5 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   // GitHub Pages project site: set base: '/your-repo-name/'
-  base: '/',
+  base: '/Saikiran-s_Portfolio/',
 })
